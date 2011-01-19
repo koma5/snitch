@@ -82,22 +82,3 @@ DELIMITER ;
 
 
 SET FOREIGN_KEY_CHECKS=1;
-
-
-
-
-
-
-
-
-
-## Old stuff ##
-
-# Gruppiert nach hostname und Zeit - die neueste IP steht in der hostname Gruppe zuunterst.
-#DROP VIEW IF EXISTS all_ip_per_host;
-#CREATE VIEW all_ip_per_host
-#AS
-#	SELECT * FROM mtm_host_ip AS mhi
-#	INNER JOIN host AS h ON h.hid = mhi.fk_host
-#	INNER JOIN ip AS i ON i.iid = mhi.fk_ip
-#	ORDER BY h.hostname, mhi.updated;
