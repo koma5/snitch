@@ -1,0 +1,81 @@
+SET FOREIGN_KEY_CHECKS=0;
+
+USE fifthch_snitch;
+
+DROP TABLES IF EXISTS user;
+CREATE TABLE user (
+	`uid` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`username` VARCHAR(30) NOT NULL UNIQUE,
+	`email` VARCHAR(30) NOT NULL,
+	`password` VARCHAR(40) NOT NULL,
+	PRIMARY KEY (`uid`),
+	INDEX (`uid`)
+) ENGINE=INNODB;
+
+DROP TABLES IF EXISTS host;
+CREATE TABLE host (
+	`hid` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`hostname` VARCHAR(30) NOT NULL UNIQUE,
+	PRIMARY KEY (`hid`),
+	INDEX (`hid`)
+) ENGINE=INNODB;
+
+DROP TABLES IF EXISTS ip;
+CREATE TABLE ip (
+	`iid` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`address` VARCHAR(16) NOT NULL UNIQUE,
+	PRIMARY KEY (`iid`),
+	INDEX (`iid`)
+) ENGINE=INNODB;
+
+
+
+DROP TABLES IF EXISTS mtm_host_ip;
+CREATE TABLE mtm_host_ip (
+	`fk_host` INT UNSIGNED NOT NULL, # derselbe Datentyp wie primary key
+	`fk_ip` INT UNSIGNED NOT NULL, # derselbe Datentyp wie primary key
+	`updated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`fk_host`, `fk_ip`),
+	INDEX (`fk_host`, `fk_ip`),
+	CONSTRAINT FOREIGN KEY (`fk_host`) REFERENCES `host` (`hid`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT FOREIGN KEY (`fk_ip`) REFERENCES `ip` (`iid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=INNODB;
+
+# Gruppiert nach hostname und Zeit - die neueste IP steht in der hostname Gruppe zuunterst.
+DROP VIEW IF EXISTS all_ip_per_host;
+CREATE VIEW all_ip_per_host
+AS
+	SELECT * FROM mtm_host_ip AS mhi
+	INNER JOIN host AS h ON h.hid = mhi.fk_host
+	INNER JOIN ip AS i ON i.iid = mhi.fk_ip
+	ORDER BY h.hostname, mhi.updated;
+
+# select alle ips, welche keinen Eintrag in mtm_host_ip haben (IPs ohne Host)
+DROP VIEW IF EXISTS ip_without_host;
+CREATE VIEW ip_without_host
+AS
+	SELECT * FROM ip
+	WHERE ip.iid NOT IN (
+		SELECT DISTINCT mtm_host_ip.fk_ip
+		FROM mtm_host_ip
+	);
+
+DROP VIEW IF EXISTS ip_per_host;
+CREATE VIEW ip_per_host
+AS
+	SELECT *
+	FROM host AS h
+	INNER JOIN mtm_host_ip AS mhi ON mhi.fk_host = h.hid
+	INNER JOIN ip AS i ON mhi.fk_ip = i.iid
+	WHERE mhi.updated = ( 
+		SELECT MAX(updated)
+		FROM mtm_host_ip AS m
+		WHERE m.fk_host = h.hid)
+	ORDER BY h.hid;
+	
+
+#DROP VIEW IF EXISTS ip_per_host;
+#CREATE VIEW ip_per_host
+#		 AS
+
+SET FOREIGN_KEY_CHECKS=1;

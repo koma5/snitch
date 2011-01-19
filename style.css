@@ -1,0 +1,46 @@
+/* 
+ *
+ * author: marco koch
+ * date: 08.01.2011
+ * made on a mac, in switzerland!
+ * 
+ */
+
+ 
+ /* #hostlist */
+ 
+ 
+ 
+#hostlist {
+	font-family:Helvetica;
+	color:black;
+	position:relative;
+	margin-top:20px;
+ 	margin-left:auto;
+	margin-right:auto;
+	width:400px;
+	background-color:yellow;
+	border: 2px solid black;
+	border-collapse:collapse;
+	text-align:left;
+}
+ 
+#hostlist tr:nth-child(2n) {
+	background-color:#C7C7C7;
+}
+ 
+#hostlist tr:nth-child(2n+1) {
+	background-color:#B0B0B0;
+}
+
+#hostlist tr th {
+	position:relative;
+	height:40px;
+}
+ 
+#hostlist tr td, th {
+	width:33%;
+	height:30px;
+	border: 1px solid black;
+	padding:4px;
+}
