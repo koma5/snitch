@@ -1,0 +1,60 @@
+
+
+<table id="hostlist">
+ <tr>
+	 <th>hostname</th>
+	<th>ip</th>
+</tr>
+
+
+<?php
+	//ini_set('display_errors', 1);
+	//error_reporting(E_ALL);
+
+	include 'db_config.php';
+	include 'db_connect.php';
+
+
+	if ($_REQUEST["hostname"])
+	{
+		$hostname = $_REQUEST["hostname"];
+		$result = mysql_query("SELECT hostname, address FROM ip_per_host WHERE hostname LIKE '$hostname%';");
+
+		while($row = mysql_fetch_array($result))
+		{
+			?>
+
+				<tr>
+								<td><?php echo $row['hostname'];  ?></td>
+								<td><?php echo $row['address'];  ?></td>
+				</tr>
+
+			<?php
+		}
+
+
+	}
+	else
+	{
+
+		$result = mysql_query("SELECT hostname, address FROM ip_per_host;");
+
+		while($row = mysql_fetch_array($result))
+		{
+			?>
+
+				<tr>
+								<td><?php echo $row['hostname'];  ?></td>
+								<td><?php echo $row['address'];  ?></td>
+				</tr>
+
+			<?php
+		}
+
+	}
+
+
+	include 'db_close.php';
+?>
+
+</table> <!-- end table #hostlist -->
