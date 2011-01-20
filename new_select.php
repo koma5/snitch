@@ -4,12 +4,15 @@
 		<th>ip</th>
 		<th>changed</th>
 	</tr>
-
+ 
 
 <?php
 	//ini_set('display_errors', 1);
 	//error_reporting(E_ALL);
 
+	
+	//// blaaaahhh
+	
 	include 'db_config.php';
 	include 'db_connect.php';
 
