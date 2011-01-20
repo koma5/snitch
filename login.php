@@ -18,7 +18,7 @@
 				//$realpassword = mysql_result(mysql_query("SELECT password FROM user WHERE username = '$username';"),0 ,0);
 				//echo "<br /> real password: " . $realpassword;
 
-				$result = mysql_query("SELECT username, password FROM user WHERE user.username = '$username' AND user.password = '$password';");
+				$result = mysql_query("SELECT usrName, usrPassword FROM tUser WHERE tUser.usrName = '$username' AND tUser.usrPassword = '$password';");
 
 
 

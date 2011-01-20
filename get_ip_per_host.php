@@ -19,12 +19,12 @@
 	$date = date("U");
 
 	$hostname = $_REQUEST["hostname"];
-	$result = mysql_query("SELECT hostname, address, Unix_Timestamp(updated) FROM ip_per_host WHERE hostname LIKE '$hostname%';");
+	$result = mysql_query("SELECT hostName, ipAddress, Unix_Timestamp(hipUpdated) FROM vIPperHost WHERE hostName LIKE '$hostname%';");
 
 	while($row = mysql_fetch_array($result))
 	{
 
-		$seconds = $date - $row['Unix_Timestamp(updated)'];
+		$seconds = $date - $row['Unix_Timestamp(hipUpdated)'];
 		//$secondsago = 31536010;
 
 

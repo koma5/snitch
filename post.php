@@ -24,7 +24,7 @@
 	//get hostname from client
 	$hostname = $_REQUEST["hostname"];
 
-	mysql_query("CALL post('$hostname', '$extip')");
+	mysql_query("CALL pPost('$hostname', '$extip')");
 
 	echo "$date <br />	$hostname - $extip <br />";
 
