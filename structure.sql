@@ -59,11 +59,15 @@ AS
 
 DELIMITER //
 DROP PROCEDURE IF EXISTS pPost//
-CREATE PROCEDURE post(IN in_hostname VARCHAR(30), IN in_ip VARCHAR(16))
+CREATE PROCEDURE pPost(IN in_hostname VARCHAR(30), IN in_ip VARCHAR(16))
 	BEGIN
 		# insert host and ip
 		INSERT IGNORE INTO tHost (hostName) values (in_hostname);
-		INSERT IGNORE INTO tIP (address) values (in_ip);
+		INSERT IGNORE INTO tIP (ipAddress) values (in_ip);
+		
+		# update timestamp, if the latest record is the same
+		UPDATE
+		
 		
 		# make old records inactive
 		UPDATE lHost_IP AS mhi
@@ -75,7 +79,7 @@ CREATE PROCEDURE post(IN in_hostname VARCHAR(30), IN in_ip VARCHAR(16))
 		INSERT INTO lHost_IP (fk_hostID, fk_ipID)
 			SELECT
 				(SELECT tHost.hostID  FROM tHost WHERE tHost.hostName = in_hostname) AS host_id,
-				(SELECT tIP.ipID FROM tIP WHERE tIP.address = in_ip) AS ip_id;
+				(SELECT tIP.ipID FROM tIP WHERE tIP.ipAddress = in_ip) AS ip_id;
 				
 	END //
 DELIMITER ;
