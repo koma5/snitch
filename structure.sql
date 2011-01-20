@@ -35,8 +35,8 @@ CREATE TABLE lHost_IP (
 	`hipID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	`fk_hostID` INT UNSIGNED NOT NULL, # derselbe Datentyp wie der primary key
 	`fk_ipID` INT UNSIGNED NOT NULL, # derselbe Datentyp wie der primary key
-	`hipCreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	`hipUpdated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	`hipCreated` TIMESTAMP NOT NULL DEFAULT now(),
+	`hipUpdated` TIMESTAMP NOT NULL,
 	`hipActive` BOOLEAN NOT NULL DEFAULT TRUE,
 	PRIMARY KEY (`hipID`),
 	INDEX (`fk_hostID`, `fk_ipID`),
