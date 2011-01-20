@@ -68,13 +68,14 @@ CREATE PROCEDURE post(IN in_hostname VARCHAR(30), IN in_ip VARCHAR(16))
 		UPDATE mtm_host_ip AS mhi
 		INNER JOIN host AS h ON mhi.fk_host = h.hid
 		SET mhi.active = FALSE
-		WHERE h.hostname = in_hostname ;
+		WHERE h.hostname = in_hostname;
 		
+		# insert values in mtm_host_ip
 		INSERT INTO mtm_host_ip (fk_host, fk_ip)
 			SELECT
 				(SELECT host.hid  FROM host WHERE host.hostname = in_hostname) AS host_id,
-				(SELECT ip.iid FROM ip WHERE ip.address = in_ip) AS ip_id
-		;
+				(SELECT ip.iid FROM ip WHERE ip.address = in_ip) AS ip_id;
+				
 	END //
 DELIMITER ;
 
