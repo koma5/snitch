@@ -11,8 +11,6 @@
 	//error_reporting(E_ALL);
 
 	
-	//// blaaaahhh
-	
 	include 'db_config.php';
 	include 'db_connect.php';
 
