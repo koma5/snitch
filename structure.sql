@@ -35,7 +35,7 @@ CREATE TABLE lHost_IP (
 	`hipID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	`fk_hostID` INT UNSIGNED NOT NULL, # derselbe Datentyp wie der primary key
 	`fk_ipID` INT UNSIGNED NOT NULL, # derselbe Datentyp wie der primary key
-	`hipCreated` TIMESTAMP NOT NULL DEFAULT now(),
+	`hipCreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`hipUpdated` TIMESTAMP NOT NULL,
 	`hipActive` BOOLEAN NOT NULL DEFAULT TRUE,
 	PRIMARY KEY (`hipID`),
@@ -68,21 +68,21 @@ CREATE PROCEDURE pPost(IN in_hostname VARCHAR(30), IN in_ip VARCHAR(16))
 		WHERE h.hostName = in_hostname;
 	
 		# insert host and ip
-		#INSERT IGNORE INTO tHost (hostName) values (in_hostname);
-		#	SELECT @@IDENTITY AS 'aIDHost';
+		INSERT IGNORE INTO tHost (hostName) VALUES (in_hostname);
+		SET @id_of_host = LAST_INSERT_ID();
 			
-		#INSERT IGNORE INTO tIP (ipAddress) values (in_ip);
-		#	SELECT @@IDENTITY AS 'aIDIP';
+		INSERT IGNORE INTO tIP (ipAddress) VALUES (in_ip);
+		SET @id_of_host = LAST_INSERT_ID();
 		
 		# update timestamp, if the latest record is the same
 		#UPDATE
 		
 		# insert values in lHost_IP
-		INSERT INTO lHost_IP (fk_hostID, fk_ipID)
-		#VALUES (aIDHost, aIDIP, TRUE);
-			SELECT
-				(SELECT tHost.hostID  FROM tHost WHERE tHost.hostName = in_hostname) AS host_id,
-				(SELECT tIP.ipID FROM tIP WHERE tIP.ipAddress = in_ip) AS ip_id;
+		INSERT INTO lHost_IP (fk_hostID, fk_ipID, hipActive, hipUpdated)
+		VALUES (@id_of_host, @id_of_host, TRUE, now());
+			#SELECT
+				#(SELECT tHost.hostID  FROM tHost WHERE tHost.hostName = in_hostname) AS host_id,
+				#(SELECT tIP.ipID FROM tIP WHERE tIP.ipAddress = in_ip) AS ip_id;
 				
 	END //
 DELIMITER ;
