@@ -56,6 +56,15 @@ AS
 	ORDER BY h.hostID;
 	
 
+# Gruppiert nach hostname und Zeit - die neueste IP steht in der hostname Gruppe zuunterst.
+DROP VIEW IF EXISTS vAllIPperHost;
+CREATE VIEW vAllIPperHost
+AS
+	SELECT * FROM lHost_IP AS mhi
+	INNER JOIN tHost AS h ON h.hostID = mhi.fk_hostID
+	INNER JOIN tIP AS i ON i.ipID = mhi.fk_ipID
+	ORDER BY h.hostName, mhi.hipUpdated;
+
 
 DELIMITER //
 DROP PROCEDURE IF EXISTS pPost//
