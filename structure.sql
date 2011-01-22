@@ -40,8 +40,8 @@ CREATE TABLE lHost_IP (
 	`hipActive` BOOLEAN NOT NULL DEFAULT TRUE,
 	PRIMARY KEY (`hipID`),
 	INDEX (`fk_hostID`, `fk_ipID`),
-	CONSTRAINT FOREIGN KEY (`fk_hostID`) REFERENCES `tHost` (`hostID`) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT FOREIGN KEY (`fk_ipID`) REFERENCES `tIP` (`ipID`) ON DELETE CASCADE ON UPDATE CASCADE
+	CONSTRAINT FOREIGN KEY (`fk_hostID`) REFERENCES `tHost` (`hostID`) ON DELETE CASCADE,
+	CONSTRAINT FOREIGN KEY (`fk_ipID`) REFERENCES `tIP` (`ipID`) ON DELETE CASCADE
 ) ENGINE=INNODB;
 
 
@@ -61,28 +61,46 @@ DELIMITER //
 DROP PROCEDURE IF EXISTS pPost//
 CREATE PROCEDURE pPost(IN in_hostname VARCHAR(30), IN in_ip VARCHAR(16))
 	BEGIN
-		# make old records inactive
-		UPDATE lHost_IP AS mhi
-		INNER JOIN tHost AS h ON mhi.fk_hostID = h.hostID
-		SET mhi.hipActive = FALSE
-		WHERE h.hostName = in_hostname;
-	
 		# insert host and ip
 		INSERT IGNORE INTO tHost (hostName) VALUES (in_hostname);
-		SET @id_of_host = LAST_INSERT_ID();
-			
+		# get id of host
+		SET @id_of_host = (SELECT hostID FROM tHost WHERE hostName = in_hostname); #SET @id_of_host = LAST_INSERT_ID(); <-- didn't work with existing record
+	
 		INSERT IGNORE INTO tIP (ipAddress) VALUES (in_ip);
-		SET @id_of_host = LAST_INSERT_ID();
+		# get id of ip
+		SET @id_of_ip = (SELECT ipID FROM tIP WHERE ipAddress = in_ip); #SET @id_of_host = LAST_INSERT_ID(); <-- didn't work with existing record
+	
 		
-		# update timestamp, if the latest record is the same
-		#UPDATE
+          SET @justUpdate = (
+                       SELECT COUNT(*) FROM lHost_IP AS mhi
+              		WHERE mhi.fk_hostID = @id_of_host
+              		AND mhi.fk_ipID = @id_of_ip
+              		AND mhi.hipActive = TRUE
+        	);
 		
-		# insert values in lHost_IP
-		INSERT INTO lHost_IP (fk_hostID, fk_ipID, hipActive, hipUpdated)
-		VALUES (@id_of_host, @id_of_host, TRUE, now());
-			#SELECT
-				#(SELECT tHost.hostID  FROM tHost WHERE tHost.hostName = in_hostname) AS host_id,
-				#(SELECT tIP.ipID FROM tIP WHERE tIP.ipAddress = in_ip) AS ip_id;
+
+          IF @justUpdate = 1 THEN
+        
+      		# update timestamp, if the latest record is the same
+        		UPDATE lHost_IP AS mhi
+        		SET mhi.hipUpdated = now()
+      		WHERE mhi.fk_hostID = @id_of_host
+          		AND mhi.fk_ipID = @id_of_ip
+          		AND mhi.hipActive = TRUE;
+          		
+          ELSE
+              
+              # make old records inactive
+      		UPDATE lHost_IP AS mhi
+      		SET mhi.hipActive = FALSE
+      		WHERE fk_hostID = @id_of_host;
+          
+      		# insert values in lHost_IP
+      		INSERT INTO lHost_IP (fk_hostID, fk_ipID, hipActive, hipUpdated)
+      		VALUES (@id_of_host, @id_of_ip, TRUE, now());
+          
+          END IF;				
+
 				
 	END //
 DELIMITER ;
