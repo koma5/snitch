@@ -31,8 +31,8 @@
 		?>
 
 	<tr>
-		<td><?php echo $row['hostname'];  ?></td>
-		<td><?php echo $row['address'];  ?></td>
+		<td><?php echo $row['hostName'];  ?></td>
+		<td><?php echo $row['ipAddress'];  ?></td>
 		<td><?php echo agostring($seconds);  ?></td>
 	</tr>
 		<?php
