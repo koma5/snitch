@@ -2,8 +2,8 @@
 
 		<form>
 			<lable name="q">search: </lable>
-			<input type="text" name="q" onkeyup="letstype(this.value)" size="20" />
+			<input type="text" name="q" onkeyup="letstype(this.value, 'get_ip_per_host.php')" size="20" />
 		</form>
 
 
-		<div id="changing"><?php include 'get_ip_per_host.php'; ?> </div>
+		<div id="qResult"><?php include 'get_ip_per_host.php'; ?> </div>

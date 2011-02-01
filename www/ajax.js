@@ -84,33 +84,33 @@ function navigationSearch()
 	}
 } //end submitlogin()
 
-function letstype(str)
+function letstype(SearchStr, phpfile)
 {
 	createAJAXobject();
 
-	if (str.length==0)
+	if (SearchStr.length==0)
 	{
 		xmlhttp.onreadystatechange=function()
 		{
 		if (xmlhttp.readyState==4 && xmlhttp.status==200)
 			{
-			document.getElementById("changing").innerHTML=xmlhttp.responseText;
+			document.getElementById("qResult").innerHTML=xmlhttp.responseText;
 			}
 		}
-		xmlhttp.open("GET","get_ip_per_host.php",true);
+		xmlhttp.open("GET",phpfile,true);
 		xmlhttp.send();
 	}
 
-	if (str.length>0)
+	if (SearchStr.length>0)
 	{
 		xmlhttp.onreadystatechange=function()
 		  {
 		  if (xmlhttp.readyState==4 && xmlhttp.status==200)
 			{
-			document.getElementById("changing").innerHTML=xmlhttp.responseText;
+			document.getElementById("qResult").innerHTML=xmlhttp.responseText;
 			}
 		  }
-		xmlhttp.open("GET","get_ip_per_host.php?hostname="+str,true);
+		xmlhttp.open("GET",phpfile+"?q="+SearchStr,true);
 		xmlhttp.send();
 	}
 } //end letstype()

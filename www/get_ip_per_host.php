@@ -18,25 +18,41 @@
 	date_default_timezone_set('Europe/Zurich');
 	$date = date("U");
 
-	$hostname = $_REQUEST["hostname"];
+	$hostname = $_REQUEST["q"];
 	$result = mysql_query("SELECT hostName, ipAddress, Unix_Timestamp(hipUpdated) FROM vIPperHost WHERE hostName LIKE '$hostname%';");
-
-	while($row = mysql_fetch_array($result))
+	$RecordCount = mysql_num_rows($result);
+	//$RecordCount = 1;
+	
+	if ($RecordCount > 0)
 	{
 
-		$seconds = $date - $row['Unix_Timestamp(hipUpdated)'];
-		//$secondsago = 31536010;
-
-
-		?>
-
-	<tr>
-		<td><?php echo $row['hostName'];  ?></td>
-		<td><?php echo $row['ipAddress'];  ?></td>
-		<td><?php echo agostring($seconds);  ?></td>
-	</tr>
-		<?php
-	}
+     	while($row = mysql_fetch_array($result))
+     	{
+    
+      		$seconds = $date - $row['Unix_Timestamp(hipUpdated)'];
+      		//$secondsago = 31536010;
+    
+      		?>
+    
+<tr>
+  <td><?php echo $row['hostName'];  ?></td>
+  <td><?php echo $row['ipAddress'];  ?></td>
+  <td><?php echo agostring($seconds);  ?></td>
+</tr>
+      		<?php
+     	}
+    } //end if RecordCount > 0
+    else {
+      
+       ?>
+        
+<tr>
+  <td colspan="3"><?php echo "oops no record found...";  ?></td>
+</tr>
+    
+        <?php
+        
+     } // end else
 
 
 	include 'db_close.php';
