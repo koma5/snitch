@@ -65,11 +65,11 @@ function submitlogout()
 } //end submitlogout()
 
 
-function navigationSearch()
+function navigation(site)
 {
 	createAJAXobject();
 
-	xmlhttp.open("GET","search.php",true);
+	xmlhttp.open("GET",site,true);
 	xmlhttp.setRequestHeader("Pragma", "no-cache");
 	xmlhttp.setRequestHeader("Cache-Control", "must-revalidate");
 	xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");

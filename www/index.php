@@ -23,9 +23,12 @@
 		
 		<ul>
 			<li>
-				<a href="javascript:;" onMouseUp="navigationSearch()">search</a>
+				<a href="javascript:;" onMouseUp="navigation('search.php')">host - ip</a>
 			</li>
-			<li>...</li>
+			
+			<li>
+     			<a href="javascript:;" onMouseUp="navigation('ip_search.php')">ip</a>
+			</li>
 		</ul>
 
  	
