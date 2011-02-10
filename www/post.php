@@ -1,13 +1,16 @@
-<?xml version="1.0"?>
+<?php
+header("Content-type: text/xml");
+echo '<?xml version="1.0"?>',"\n";
+
+?>
 <snitch>
- <titel>snitch - post</titel>
- <content>
-
-
-
+<titel>snitch - post</titel>
+<content>
 <?php
 	//ini_set('display_errors', 1);
-	error_reporting(0);
+	//error_reporting(E_ALL);
+	
+	header("Content-type: text/xml");
 
 	include 'db_config.php';
 	include 'db_connect.php';
@@ -41,13 +44,13 @@
 				  'description'=>"$hostname - $extip ",
 				  'priority'=>0,
 			  ),true);
-		echo "<PushSent>true</PushSent>";
+		echo "<PushSent>true</PushSent>\n";
 		//var_dump($prowl->getError());	// Optional
 		//var_dump($prowl->getRemaining()); // Optional
     }
 	else
 	{
-		echo "<PushSent>false</PushSent>";
+		echo "<PushSent>false</PushSent>\n";
 	}
 
 
@@ -59,5 +62,5 @@
 	
 	include 'db_close.php';
 ?>
- </content>
+</content>
 </snitch>
