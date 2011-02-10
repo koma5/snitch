@@ -1,11 +1,13 @@
-<html>
-<head>
-</head>
-<body>
+<?xml version="1.0"?>
+<snitch>
+ <titel>snitch - post</titel>
+ <content>
+
+
 
 <?php
 	//ini_set('display_errors', 1);
-	//error_reporting(E_ALL);
+	error_reporting(0);
 
 	include 'db_config.php';
 	include 'db_connect.php';
@@ -32,26 +34,30 @@
     
     if ($RecordCount == 0)
     {
-      $prowl = new Prowl('1c1fb8fa620a9577bddd591b5f2b360eb7feb1a1');
-      $prowl->push(array(
-                  'application'=>'snitch',
-                  'event'=>'new ip...',
-                  'description'=>"$hostname - $extip ",
-                  'priority'=>0,
-              ),true);
-  
-      //var_dump($prowl->getError());	// Optional
-      //var_dump($prowl->getRemaining()); // Optional
+		$prowl = new Prowl('1c1fb8fa620a9577bddd591b5f2b360eb7feb1a1');
+		$prowl->push(array(
+				  'application'=>'snitch',
+				  'event'=>'new ip...',
+				  'description'=>"$hostname - $extip ",
+				  'priority'=>0,
+			  ),true);
+		echo "<PushSent>true</PushSent>";
+		//var_dump($prowl->getError());	// Optional
+		//var_dump($prowl->getRemaining()); // Optional
     }
+	else
+	{
+		echo "<PushSent>false</PushSent>";
+	}
 
 
 	mysql_query("CALL pPost('$hostname', '$extip')");
 
-	echo "$date <br />	$hostname - $extip <br />";
+	//echo "<date>$date</date>";
+	echo "<host>$hostname</host>\n";
+	echo "<extip>$extip</extip>\n";
 	
 	include 'db_close.php';
 ?>
-
-
-</body>
-</html>
+ </content>
+</snitch>
