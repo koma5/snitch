@@ -4,8 +4,7 @@ echo '<?xml version="1.0"?>',"\n";
 
 ?>
 <snitch>
-<titel>snitch - post</titel>
-<content>
+<posted>
 <?php
 	//ini_set('display_errors', 1);
 	//error_reporting(E_ALL);
@@ -44,23 +43,23 @@ echo '<?xml version="1.0"?>',"\n";
 				  'description'=>"$hostname - $extip ",
 				  'priority'=>0,
 			  ),true);
-		echo "<PushSent>true</PushSent>\n";
+		echo "<PushNewIpSent>true</PushNewIpSent>\n";
 		//var_dump($prowl->getError());	// Optional
 		//var_dump($prowl->getRemaining()); // Optional
     }
 	else
 	{
-		echo "<PushSent>false</PushSent>\n";
+		echo "<PushNewIpSent>false</PushNewIpSent>\n";
 	}
 
 
 	mysql_query("CALL pPost('$hostname', '$extip')");
 
 	//echo "<date>$date</date>";
-	echo "<host>$hostname</host>\n";
+	echo "<hostname>$hostname</hostname>\n";
 	echo "<extip>$extip</extip>\n";
 	
 	include 'db_close.php';
 ?>
-</content>
+</posted>
 </snitch>
